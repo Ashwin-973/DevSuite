@@ -39,6 +39,13 @@ app.use((req,res,next)=>
 })
 
 //main entry point of api utility endpoints
+app.get('/',(req,res)=>
+{
+    res.json({
+        status:'OK',
+        message:'Gentlemen...Welcome to Fight Club'
+    })
+})
 app.use('/api',routes)
 
 app.get('/health',(req,res)=>
