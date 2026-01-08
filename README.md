@@ -221,11 +221,11 @@ DevSuite uses **Supabase** (PostgreSQL) for data persistence. The URL shortener 
 
 ## 📖 Usage Examples
 
-### URL Shortener
+### 🔗 URL Shortener
 
 **Shorten a URL**
 ```bash
-curl -X POST http://localhost:3000/api/v1/shorten \
+curl -X POST http://localhost:3000/api/v1/url/shorten \
   -H "Content-Type: application/json" \
   -d '{
     "originalUrl": "https://github.com/yourusername/devsuite",
@@ -233,17 +233,45 @@ curl -X POST http://localhost:3000/api/v1/shorten \
   }'
 ```
 
-**Access shortened URL**
+Response:
+```json
+{
+  "success": true,
+  "message": "URL shortened successfully",
+  "data": {
+    "shortId": "aB3xY",
+    "shortUrl": "http://localhost:3000/api/v1/url/aB3xY",
+    "originalUrl": "https://github.com/yourusername/devsuite",
+    "expiresAt": "2025-01-15T10:30:00.000Z"
+  }
+}
+```
+
+**Redirect to original URL**
 ```bash
-curl -L http://localhost:3000/abc123
+curl -L http://localhost:3000/api/v1/url/aB3xY
+# Automatically redirects and increments click count
 ```
 
 **Get analytics**
 ```bash
-curl http://localhost:3000/api/v1/analytics/abc123
+curl http://localhost:3000/api/v1/url/analytics/aB3xY
 ```
 
-### Text Transformation
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "clicks": 42,
+    "createdAt": "2025-01-08T10:30:00.000Z",
+    "lastAccessed": "2025-01-08T15:45:00.000Z",
+    "expiresAt": "2025-01-15T10:30:00.000Z"
+  }
+}
+```
+
+### 📝 Text Transformation
 
 **Base64 Encode**
 ```bash
@@ -252,66 +280,260 @@ curl -X POST "http://localhost:3000/api/v1/text/base64?op=encode" \
   -d '{"input": "Hello DevSuite!"}'
 ```
 
-**Convert to slug**
+**Base64 Decode**
+```bash
+curl -X POST "http://localhost:3000/api/v1/text/base64?op=decode" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "SGVsbG8gRGV2U3VpdGUh"}'
+```
+
+**URL Encode**
+```bash
+curl -X POST "http://localhost:3000/api/v1/text/url?op=encode" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "hello world & special chars!"}'
+```
+
+**Slugify**
 ```bash
 curl -X POST "http://localhost:3000/api/v1/text/slugify?separator=hyphen" \
   -H "Content-Type: application/json" \
-  -d '{"input": "The Amazing DevSuite 2024"}'
+  -d '{"input": "The Amazing DevSuite 2024!"}'
+# Returns: "the-amazing-devsuite-2024"
 ```
 
-**Case conversion**
+**Case Conversion**
 ```bash
+# camelCase
 curl -X POST "http://localhost:3000/api/v1/text/case?type=camel" \
   -H "Content-Type: application/json" \
   -d '{"input": "convert this to camel case"}'
-```
+# Returns: "convertThisToCamelCase"
 
-### Timezone Operations
-
-**Convert timezone**
-```bash
-curl -X POST http://localhost:3000/api/v1/timezone/convert \
+# snake_case
+curl -X POST "http://localhost:3000/api/v1/text/case?type=snake" \
   -H "Content-Type: application/json" \
-  -d '{
-    "datetime": "2024-01-15T10:30:00",
-    "from": "America/New_York", 
-    "to": "Asia/Tokyo"
-  }'
-```
+  -d '{"input": "Convert This To Snake Case"}'
+# Returns: "convert_this_to_snake_case"
 
-**Get current time**
-```bash
-curl "http://localhost:3000/api/v1/timezone/current?location=London"
-```
-
-### Cron Generator
-
-**Generate cron from English**
-```bash
-curl -X POST http://localhost:3000/api/v1/cron/generate \
+# PascalCase
+curl -X POST "http://localhost:3000/api/v1/text/case?type=pascal" \
   -H "Content-Type: application/json" \
-  -d '{"description": "every Monday at 9 AM"}'
+  -d '{"input": "convert this to pascal case"}'
+# Returns: "ConvertThisToPascalCase"
 ```
 
-**Validate cron expression**
+**Morse Code**
 ```bash
-curl -X POST http://localhost:3000/api/v1/cron/validate \
+# Encode to Morse
+curl -X POST "http://localhost:3000/api/v1/text/morse?op=encode" \
   -H "Content-Type: application/json" \
-  -d '{"expression": "0 9 * * 1"}'
+  -d '{"input": "SOS"}'
+# Returns: "... --- ..."
+
+# Decode from Morse
+curl -X POST "http://localhost:3000/api/v1/text/morse?op=decode" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "... --- ..."}'
+# Returns: "SOS"
 ```
 
-### Health Check
+### 🌍 Timezone Operations
 
-**Monitor a service**
+**Get Current Time by City and Country**
 ```bash
-curl -X POST http://localhost:3000/api/v1/health/monitor \
-  -H "Content-Type: application/json" \
-  -d '{"url": "https://api.github.com"}'
+curl "http://localhost:3000/api/v1/time/now?city=London&country=United-Kingdom"
 ```
 
-**Check API health**
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "location": "London, United Kingdom",
+    "timezone": "Europe/London",
+    "currentTime": "2025-01-08T15:30:00.000Z",
+    "localTime": "2025-01-08T15:30:00.000+00:00",
+    "utcOffset": "+00:00",
+    "isDST": false,
+    "source": "City/Country Lookup (GeoNames)"
+  }
+}
+```
+
+**Get Current Time by IP Address**
+```bash
+curl "http://localhost:3000/api/v1/time/now?ip=8.8.8.8"
+```
+
+**Get Current Time by Coordinates**
+```bash
+curl "http://localhost:3000/api/v1/time/now?lat=40.7128&lon=-74.0060"
+```
+
+**Convert Time Between Timezones**
+```bash
+# With explicit offset (offset takes precedence over fromZone)
+curl "http://localhost:3000/api/v1/time/convert?dateTime=2025-10-20T15:00:00%2B05:30&fromZone=Australia/Perth&toZone=America/Noronha"
+
+# Without offset (uses fromZone)
+curl "http://localhost:3000/api/v1/time/convert?dateTime=2025-10-20T15:00:00&fromZone=America/New_York&toZone=Asia/Tokyo"
+```
+
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "original": {
+      "dateTime": "2025-10-20T15:00:00+05:30",
+      "timezone": "UTC+05:30",
+      "utcOffset": "+05:30"
+    },
+    "converted": {
+      "dateTime": "2025-10-20T07:30:00-02:00",
+      "timezone": "America/Noronha",
+      "utcOffset": "-02:00",
+      "isDST": false
+    },
+    "warnings": ["fromZone was provided but ignored because the DateTime string included an explicit offset."]
+  }
+}
+```
+
+**Format Time**
+```bash
+curl "http://localhost:3000/api/v1/time/format?dateTime=2025-01-08T15:30:00&zone=America/New_York&format=yyyy-MM-dd%20HH:mm:ss%20ZZZZ"
+```
+
+**Lookup Timezone Metadata**
+```bash
+curl "http://localhost:3000/api/v1/time/lookup?city=Tokyo&country=Japan"
+```
+
+### ⏰ Cron Expression Tools
+
+**Translate Cron to Human-Readable**
+```bash
+curl "http://localhost:3000/api/v1/cron/translate?expression=0%209%20*%20*%201"
+```
+
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "expression": "0 9 * * 1",
+    "description": "At 09:00 AM, only on Monday"
+  }
+}
+```
+
+**Preview Next Executions**
+```bash
+curl "http://localhost:3000/api/v1/cron/preview?expression=0%209%20*%20*%201&count=5"
+```
+
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "expression": "0 9 * * 1",
+    "description": "At 09:00 AM, only on Monday",
+    "nextRuns": [
+      "2025-01-13T09:00:00.000Z",
+      "2025-01-20T09:00:00.000Z",
+      "2025-01-27T09:00:00.000Z",
+      "2025-02-03T09:00:00.000Z",
+      "2025-02-10T09:00:00.000Z"
+    ]
+  }
+}
+```
+
+### 🔍 HTTP Analysis & Monitoring
+
+**Analyze HTTP Headers**
+```bash
+curl "http://localhost:3000/api/v1/analyze/headers?url=https://github.com"
+```
+
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "url": "https://github.com",
+    "checkedAt": "2025-01-08T15:30:00.000Z",
+    "httpStatus": 200,
+    "rawHeaders": {
+      "cache-control": "max-age=0, private, must-revalidate",
+      "strict-transport-security": "max-age=31536000; includeSubdomains; preload",
+      "x-frame-options": "deny"
+    },
+    "analysis": {
+      "cache": {
+        "summary": "This resource can be cached by browsers only (not shared caches) for 0 seconds.",
+        "directives": {
+          "max-age": 0,
+          "private": true,
+          "no-cache": true
+        }
+      },
+      "security": {
+        "summary": "Enforces HTTPS (HSTS). Blocks clickjacking (X-Frame-Options: DENY). Prevents MIME-sniffing.",
+        "directives": {
+          "strict-transport-security": "max-age=31536000; includeSubdomains; preload",
+          "x-frame-options": "deny"
+        }
+      },
+      "cors": {
+        "summary": "No CORS headers found.",
+        "directives": {}
+      }
+    }
+  }
+}
+```
+
+**Monitor URL Health**
+```bash
+curl "http://localhost:3000/api/v1/analyze/url?url=https://api.github.com&timeout=5000"
+```
+
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "url": "https://api.github.com",
+    "status": "UP",
+    "httpStatus": 200,
+    "ipAddress": "140.82.121.6",
+    "latencyMs": 145,
+    "ssl": {
+      "isValid": true,
+      "issuer": "DigiCert Inc",
+      "expiresOn": "2026-03-15T12:00:00.000Z",
+      "error": null
+    },
+    "error": null
+  }
+}
+```
+
+**Check API Health**
 ```bash
 curl http://localhost:3000/health
+```
+
+Response:
+```json
+{
+  "status": "OK",
+  "timestamp": "Wed Jan 08 2025 15:30:00 GMT+0000 (UTC)"
+}
 ```
 
 ## 🐳 Docker Deployment
