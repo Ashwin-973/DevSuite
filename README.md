@@ -1,12 +1,12 @@
 # DevSuite 🚀
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org)
-[![Express](https://img.shields.io/badge/Express-4.18+-blue.svg)](https://expressjs.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-blue.svg)](https://postgresql.org)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Express](https://img.shields.io/badge/Express-5.1+-blue.svg)](https://expressjs.com)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E.svg)](https://supabase.com)
+[![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
 [![API](https://img.shields.io/badge/API-REST-orange.svg)]()
 
-> **Developer productivity tools on steroids** - A comprehensive REST API suite providing essential utilities that every developer needs in their daily workflow.
+> **Developer productivity tools as a service** - A production-ready REST API suite providing essential utilities for modern development workflows.
 
 ## 📋 Table of Contents
 
@@ -14,98 +14,91 @@
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [API Documentation](#api-documentation)
-- [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage Examples](#usage-examples)
+- [Architecture](#architecture)
+- [Security](#security)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## 🔍 Overview
 
-DevSuite is a powerful collection of developer productivity tools exposed through a clean, RESTful API. Built with Node.js and Express, it provides essential utilities that developers frequently need, all accessible through simple HTTP requests.
+DevSuite is a comprehensive collection of developer productivity tools exposed through a clean, RESTful API. Built with Node.js, Express 5, and Supabase, it provides battle-tested utilities that developers need daily, all accessible through simple HTTP requests.
 
 ### Why DevSuite?
 
-- **🎯 All-in-One**: Multiple essential tools in a single API
-- **⚡ High Performance**: Optimized for speed and reliability
-- **🔒 Secure**: Built with security best practices
-- **📊 Analytics**: Built-in monitoring and usage analytics
-- **🐳 Docker Ready**: Easy deployment with Docker support
-- **📚 Well Documented**: Comprehensive API documentation
+- **🎯 All-in-One**: Six major tool categories in a single API
+- **⚡ High Performance**: Optimized with caching, connection pooling, and efficient algorithms
+- **🔒 Production-Ready**: Rate limiting, input validation, security headers, and comprehensive error handling
+- **🌍 Global Coverage**: Timezone operations with IANA database, GeoNames, and MaxMind integration
+- **📊 Analytics**: Built-in URL analytics and request latency monitoring
+- **🛡️ Robust**: Graceful error handling with detailed error responses
 
 ## ✨ Features
 
 ### 🔗 URL Shortener
-Transform long URLs into short, manageable links with comprehensive analytics.
+Production-grade URL shortening service with analytics and expiration control.
 
-- **Link Shortening**: Generate short URLs using Base62 encoding
-- **Click Tracking**: Real-time analytics with click counts
-- **Expiration Control**: Set custom expiration times (7d, 24h, etc.)
-- **Analytics Dashboard**: Detailed metrics including creation time, last accessed, and click trends
+- **Base62 Encoding**: Collision-resistant short IDs using database auto-increment
+- **Click Analytics**: Track clicks, last accessed time, and creation timestamps
+- **Expiration Control**: Set custom TTL using human-readable formats (7d, 24h, 30m)
+- **Supabase Integration**: Leverages PostgreSQL stored procedures for atomic click increments
+- **Redirect Service**: Fast 302 redirects with automatic click tracking
 
-### 📝 Text Transformation Utilities
-Powerful text processing and encoding tools for various use cases.
+### 📝 Text Transformation
+Comprehensive text processing utilities for encoding, formatting, and conversion.
 
-- **Base64 Encoding/Decoding**: Secure data encoding and decoding
-- **URL Encoding/Decoding**: Handle URL-safe text transformations  
-- **UTF-8 Encoding**: Universal character encoding support
-- **Slugify**: Convert text to URL-friendly slugs with customizable separators
-- **Case Conversion**: Multiple case formats (camelCase, snake_case, kebab-case, PascalCase, etc.)
-- **Morse Code**: Encode/decode text to/from Morse code
+- **Base64 Encoding/Decoding**: Bidirectional Base64 transformation
+- **URL Encoding/Decoding**: Percent-encoding for URL-safe strings
+- **Slugify**: Convert text to URL-friendly slugs with customizable separators (hyphen, underscore)
+- **Case Conversion**: Support for camelCase, snake_case, kebab-case, PascalCase, CONSTANT_CASE, and more
+- **Morse Code**: Bidirectional Morse code translation with international support
 
-### 🌍 Timezone & Time Utilities
-Comprehensive timezone management and time conversion capabilities.
+### 🌍 Timezone & Time Operations
+Enterprise-grade timezone conversion and time retrieval with multiple data sources.
 
-- **Universal Time Conversion**: Convert between any timezones using IANA database
-- **ISO 8601 Support**: Full support for ISO 8601 with timezone offsets
-- **Current Time Retrieval**: Get current time for any location (city, country, coordinates, IP)
-- **Timezone Lookup**: Comprehensive timezone metadata including DST rules
-- **Custom Time Formats**: User-defined time format patterns
-- **Robust Error Handling**: Graceful handling of invalid timezone IDs and malformed datetime strings
+- **Multi-Source Time Lookup**: Get current time via IP (MaxMind), coordinates (geo-tz), or location name (GeoNames)
+- **Intelligent Timezone Conversion**: Handles ISO 8601 with explicit offsets, IANA timezone IDs, and ambiguous inputs
+- **Smart Offset Handling**: Automatically corrects URL-decoded `+` signs in timezone offsets
+- **Custom Formatting**: User-defined time format patterns using Luxon tokens
+- **Comprehensive Metadata**: Returns timezone abbreviations, DST status, UTC offsets, and warnings
+- **Robust Error Handling**: Graceful degradation with detailed error messages and audit trails
+- **Private IP Detection**: Prevents geolocation of private/reserved IP addresses
+- **Coordinate Validation**: Validates lat/lon ranges and handles international waters
 
-### ⏰ Cron Expression Generator
-Intelligent cron expression management with natural language processing.
+### ⏰ Cron Expression Tools
+Parse, validate, and preview cron expressions with human-readable translations.
 
-- **English to Cron**: Convert natural language to cron syntax ("every Monday at 9 AM")
-- **Expression Parsing**: Parse and validate complex cron expressions
-- **Validation**: Comprehensive cron expression validation
-- **Next Execution**: Calculate next execution times
-- **Human Readable**: Convert cron back to human-readable format
+- **Expression Translation**: Convert cron syntax to natural language using cronstrue
+- **Execution Preview**: Calculate next N execution times using cron-parser
+- **Comprehensive Validation**: Validates 5-field and 6-field cron expressions
+- **Human-Readable Output**: "At 09:00 AM, only on Monday" instead of "0 9 * * 1"
 
-### 🏥 Health Check & Monitoring
-Comprehensive monitoring solution for your applications and dependencies.
+### 🔍 HTTP Analysis & Monitoring
+Deep inspection of HTTP headers, security policies, and endpoint health.
 
-- **Third-party Monitoring**: Ping and monitor external services
-- **Latency Tracking**: Real-time latency measurements
-- **HTTP Status Monitoring**: Track response codes and trends
-- **Self-Health Monitoring**: Built-in API health checks
-- **Uptime Statistics**: Detailed availability reports
-
-### 🔍 Text Validation Utilities
-Essential validation tools for common data formats.
-
-- **JSON Validation**: Validate JSON structure and syntax
-- **UUID Validation**: Check UUID format compliance
-- **IP Address Validation**: Validate IPv4 and IPv6 addresses
-- **Email Validation**: RFC-compliant email address validation
-- **Number Validation**: Numeric format validation
-- **URL Validation**: Comprehensive URL structure validation
-- **Alphanumeric Validation**: Character set validation
+- **Header Analysis**: Analyze cache-control, security headers, and CORS policies
+- **Security Auditing**: Check for HSTS, CSP, X-Frame-Options, and other security headers
+- **Cache Policy Inspection**: Detailed breakdown of cache directives with human-readable summaries
+- **URL Health Checks**: Monitor endpoint availability, latency, HTTP status, and SSL certificate validity
+- **SSL Certificate Analysis**: Extract issuer, expiration date, and validation status
+- **IP Resolution**: Capture resolved IP addresses for monitored endpoints
+- **SSRF Protection**: Validates URLs and blocks requests to private IP ranges
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
-- PostgreSQL 13+
-- npm or yarn
+- **Node.js 18+** (ES Modules support required)
+- **Supabase Account** (for PostgreSQL database)
+- **GeoNames Account** (optional, for location-based timezone lookup)
+- **MaxMind Account** (optional, for IP-based geolocation)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/yourusername/devsuite.git
-   cd devsuite
+   cd devsuite/backend
    ```
 
 2. **Install dependencies**
@@ -113,24 +106,66 @@ Essential validation tools for common data formats.
    npm install
    ```
 
-3. **Set up environment variables**
+3. **Configure environment variables**
+
+   Create a `.env` file in the `backend` directory:
    ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
+   # Server Configuration
+   PORT=3000
+   NODE_ENV=development
+
+   # Supabase Configuration (Required)
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_KEY=your-anon-key
+
+   # GeoNames API (Optional - for city/country timezone lookup)
+   GEONAMES_USERNAME=your-username
+
+   # MaxMind GeoIP2 (Optional - for IP-based geolocation)
+   MAXMIND_ACCOUNT_ID=your-account-id
+   MAXMIND_LICENSE_KEY=your-license-key
    ```
 
-4. **Initialize database**
-   ```bash
-   npm run setup
+4. **Set up Supabase database**
+
+   Run the following SQL in your Supabase SQL editor:
+   ```sql
+   -- Create URLs table
+   CREATE TABLE urls (
+     id BIGSERIAL PRIMARY KEY,
+     short_id VARCHAR(20) UNIQUE NOT NULL,
+     original_url TEXT NOT NULL,
+     clicks INTEGER DEFAULT 0,
+     created_at TIMESTAMP DEFAULT NOW(),
+     last_accessed TIMESTAMP,
+     expires_at TIMESTAMP
+   );
+
+   -- Create stored procedure for atomic click increment
+   CREATE OR REPLACE FUNCTION increment_clicks(short_id_param VARCHAR)
+   RETURNS VOID AS $$
+   BEGIN
+     UPDATE urls
+     SET clicks = clicks + 1,
+         last_accessed = NOW()
+     WHERE short_id = short_id_param;
+   END;
+   $$ LANGUAGE plpgsql;
+
+   -- Create index for faster lookups
+   CREATE INDEX idx_short_id ON urls(short_id);
+   CREATE INDEX idx_expires_at ON urls(expires_at);
    ```
 
 5. **Start the server**
    ```bash
-   npm run dev  # Development mode
+   npm run dev  # Development mode with nodemon
    npm start    # Production mode
    ```
 
 The API will be available at `http://localhost:3000`
+
+**Health check**: `curl http://localhost:3000/health`
 
 ## 📚 API Documentation
 
@@ -140,18 +175,29 @@ http://localhost:3000/api/v1
 ```
 
 ### Authentication
-Currently, no authentication is required. Rate limiting is applied (1000 requests per 15 minutes per IP).
+No authentication required. Rate limiting: **1000 requests per 15 minutes per IP**.
 
 ### Response Format
-All API responses follow a consistent format:
+All successful responses follow this format:
 
 ```json
 {
   "success": true,
   "message": "Operation completed successfully",
   "data": {
-    // Response data here
+    // Response payload
   }
+}
+```
+
+Error responses:
+
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "code": "ERROR_CODE",
+  "statusCode": 400
 }
 ```
 
@@ -159,20 +205,19 @@ All API responses follow a consistent format:
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | Server port | `3000` |
-| `NODE_ENV` | Environment | `development` |
-| `DB_HOST` | Database host | `localhost` |
-| `DB_PORT` | Database port | `5432` |
-| `DB_NAME` | Database name | `devsuite` |
-| `DB_USER` | Database user | `postgres` |
-| `DB_PASSWORD` | Database password | - |
-| `BASE_URL` | Application base URL | `http://localhost:3000` |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `PORT` | Server port | No | `3000` |
+| `NODE_ENV` | Environment (development/production) | No | `development` |
+| `SUPABASE_URL` | Supabase project URL | **Yes** | - |
+| `SUPABASE_KEY` | Supabase anon/public key | **Yes** | - |
+| `GEONAMES_USERNAME` | GeoNames API username | No | `demo` |
+| `MAXMIND_ACCOUNT_ID` | MaxMind account ID | No | - |
+| `MAXMIND_LICENSE_KEY` | MaxMind license key | No | - |
 
 ### Database Configuration
 
-DevSuite uses PostgreSQL for data persistence. The database schema is automatically created when you run the setup script.
+DevSuite uses **Supabase** (PostgreSQL) for data persistence. The URL shortener requires the `urls` table and `increment_clicks` stored procedure (see Quick Start section).
 
 ## 📖 Usage Examples
 
